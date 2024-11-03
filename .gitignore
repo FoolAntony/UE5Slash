@@ -70,5 +70,22 @@ Saved/*
 Intermediate/*
 Plugins/**/Intermediate/*
 
+Binaries
+Intermediate
+Saved
+Build
+Content
+**/BlackAlder
+**/Landscape
+**/MedievalDungeon
+**/Megascans
+**/StarterContent
+**/Assets
+
+
+.vscode
+*.opendb
+
+
 # Cache files for the editor to use
 DerivedDataCache/*
