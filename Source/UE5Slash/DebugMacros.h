@@ -18,3 +18,6 @@
 		DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, -1.f, 0, 1.f); \
 		DrawDebugPoint(GetWorld(), EndLocation, 15.f, FColor::Red, false, -1.f); \
 	}
+
+#define DRAW_CAPSULE(Location, Rotation) if (GetWorld()) DrawDebugCapsule(GetWorld(), Location, 50.f, 25.f, Rotation, FColor::Emerald, true);
+#define DRAW_CAPSULE_SingleFrame(Location, Rotation) if (GetWorld()) DrawDebugCapsule(GetWorld(), Location, 50.f, 25.f, Rotation, FColor::Emerald, false, -1.f, 0, 0.5f);
