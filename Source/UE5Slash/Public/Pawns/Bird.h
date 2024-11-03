@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Bird.generated.h"
+class UCapsuleComponent;
 
 UCLASS()
 class UE5SLASH_API ABird : public APawn
@@ -15,15 +16,19 @@ public:
 	// Sets default values for this pawn's properties
 	ABird();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+private:	
+	UPROPERTY(VisibleAnywhere)
+	UCapsuleComponent* Capsule;
+
 
 };
