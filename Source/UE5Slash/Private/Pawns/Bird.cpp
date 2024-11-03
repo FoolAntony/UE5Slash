@@ -2,6 +2,7 @@
 
 
 #include "Pawns/Bird.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ABird::ABird()
