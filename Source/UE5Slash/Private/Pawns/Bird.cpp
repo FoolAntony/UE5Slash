@@ -2,7 +2,7 @@
 
 
 #include "Pawns/Bird.h"
-#include "DrawDebugHelpers.h"
+#include "UE5Slash/DebugMacros.h"
 
 // Sets default values
 ABird::ABird()
