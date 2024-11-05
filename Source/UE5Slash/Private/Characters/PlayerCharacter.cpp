@@ -3,6 +3,10 @@
 
 #include "Characters/PlayerCharacter.h"
 
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
+#include "Components/InputComponent.h"
+
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
@@ -11,10 +15,28 @@ APlayerCharacter::APlayerCharacter()
 
 }
 
+void APlayerCharacter::Move(const FInputActionValue& Value)
+{
+	const FVector2D MovementVector = Value.Get<FVector2D>();
+
+	FVector Forward = GetActorForwardVector();
+	AddMovementInput(Forward, MovementVector.Y);
+	FVector Right = GetActorRightVector();
+	AddMovementInput(Right, MovementVector.X);
+}
+
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(GContext, 0);
+		}
+	}
 	
 }
 
@@ -29,6 +51,12 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if (UEnhancedInputComponent* EnInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnInputComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
+		//EnInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABird::Look);
+	}
 
 }
 
