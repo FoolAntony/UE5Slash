@@ -12,6 +12,7 @@ class UInputMappingContext;
 class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
+class UGroomComponent;
 
 UCLASS()
 class UE5SLASH_API APlayerCharacter : public ACharacter
@@ -53,4 +54,9 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* PlayerCamera;
 
+	UPROPERTY(VisibleAnywhere, Category = "Hairs")
+	UGroomComponent* Hair;
+
+	UPROPERTY(VisibleAnywhere, Category = "Hairs")
+	UGroomComponent* Eyebrows;
 };

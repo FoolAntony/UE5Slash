@@ -8,6 +8,7 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GroomComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -26,6 +27,14 @@ APlayerCharacter::APlayerCharacter()
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	PlayerCamera->SetupAttachment(CameraBoom);
 
+	Hair = CreateDefaultSubobject<UGroomComponent>(TEXT("Hair"));
+	Hair->SetupAttachment(GetMesh());
+	Hair->AttachmentName = FString("head");
+
+	Eyebrows = CreateDefaultSubobject<UGroomComponent>(TEXT("Eyebrows"));
+	Eyebrows->SetupAttachment(GetMesh());
+	Eyebrows->AttachmentName = FString("head");
+
 }
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
@@ -34,11 +43,7 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 
 	if (Controller && (MovementVector != FVector2D::ZeroVector))
 	{
-		//FVector Forward = GetActorForwardVector();
-		//FVector Right = GetActorRightVector();
-		//AddMovementInput(Right, MovementVector.X);
-
-		//find out which way is forward
+		//Movement Direction depends on the rotation 
 		const FRotator ControlRotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f);
 
