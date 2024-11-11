@@ -3,6 +3,7 @@
 
 #include "Components/SphereComponent.h"
 #include "Item.h"
+#include "Characters/PlayerCharacter.h"
 
 // Sets default values
 AItem::AItem()
@@ -20,20 +21,19 @@ AItem::AItem()
 
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	const FString OtherActorName = OtherActor->GetName();
-	if (GEngine)
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
+	if (PlayerCharacter)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 32.f, FColor::Green, OtherActorName);
+		PlayerCharacter->SetOverlappingItem(this);
 	}
 }
 
 void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	const FString OtherActorName = FString("Ending Overlap with: ") + OtherActor->GetName();
-	
-	if (GEngine)
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
+	if (PlayerCharacter)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 32.f, FColor::Magenta, OtherActorName);
+		PlayerCharacter->SetOverlappingItem(nullptr);
 	}
 }
 
