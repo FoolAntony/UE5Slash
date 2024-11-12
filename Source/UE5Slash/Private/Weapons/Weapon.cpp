@@ -5,6 +5,13 @@
 #include "Characters/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
+
+AWeapon::AWeapon()
+{
+	WeaponBoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Weapon Box Collider"));
+	WeaponBoxCollider->SetupAttachment(GetRootComponent());
+}
 
 void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
 {

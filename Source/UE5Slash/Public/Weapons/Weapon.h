@@ -11,6 +11,7 @@
  */
 
 class USoundBase;
+class UBoxComponent;
 
 UCLASS()
 class UE5SLASH_API AWeapon : public AItem
@@ -18,6 +19,8 @@ class UE5SLASH_API AWeapon : public AItem
 	GENERATED_BODY()
 
 public:
+
+	AWeapon();
 
 	void Equip(USceneComponent* InParent, FName InSocketName);
 
@@ -32,4 +35,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	USoundBase* EquipSound;
+
+	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
+	UBoxComponent* WeaponBoxCollider;
 };
