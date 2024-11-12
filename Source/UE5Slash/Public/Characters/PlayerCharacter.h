@@ -15,6 +15,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UGroomComponent;
 class AItem;
+class UAnimMontage;
 
 
 UCLASS()
@@ -33,13 +34,16 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void Jump() override;
-	void Interact();
+	
 
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	/*
+	*	Enhanced input action variables
+	*/
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* GContext;
 
@@ -53,16 +57,39 @@ protected:
 	UInputAction* JumpAction;
 	
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* InteractAction;
+	UInputAction* InteractAction;	
+	
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* AttackAction;
 
+	/*
+	*	Enhanced action functions
+	*/
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void Interact();
+	void Attack();
 
+	/*
+	*	Play montage functions
+	*/
+	void PlayAttackMontage();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+	bool CanAttack();
 
 private:
 
+	/*
+	*	Player states
+	*/
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+	EActionState ActionState = EActionState::EAS_Unoccupied;
 
+	/*
+	*	Player character actor components
+	*/
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CameraBoom;
 
@@ -77,6 +104,12 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
+	
+	/*
+	*	Animation montages
+	*/
+	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	UAnimMontage* AttackMontage;
 
 public:
 
