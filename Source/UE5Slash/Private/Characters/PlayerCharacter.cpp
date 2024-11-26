@@ -12,6 +12,7 @@
 #include "Item.h"
 #include "Weapons/Weapon.h"
 #include "Animation/AnimMontage.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -188,12 +189,18 @@ void APlayerCharacter::PlayEquipMontage(FName SectionName)
 	}
 }
 
+void APlayerCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)
+{
+	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
+	{
+		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+	}
+}
+
 void APlayerCharacter::AttackEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
 }
-
-
 
 void APlayerCharacter::Jump()
 {
