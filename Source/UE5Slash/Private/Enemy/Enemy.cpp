@@ -67,8 +67,17 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 			ImpactPoint
 		);
 	}
+	if (HitParticles)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			HitParticles,
+			ImpactPoint
+		);
+	}
 
 }
+
 void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 {
 	const FVector Forward = GetActorForwardVector();
