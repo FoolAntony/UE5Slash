@@ -4,6 +4,7 @@
 #include "GeometryCollection/GeometryCollectionComponent.h"
 #include "Breakable/BreakableActor.h"
 #include "Items/Treasure.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ABreakableActor::ABreakableActor()
@@ -12,12 +13,17 @@ ABreakableActor::ABreakableActor()
 	PrimaryActorTick.bCanEverTick = false;
 
 	GeometryCollection = CreateDefaultSubobject<UGeometryCollectionComponent>(TEXT("GeometryCollection"));
+	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 	SetRootComponent(GeometryCollection);
+	Capsule->SetupAttachment(GetRootComponent());
 
 	GeometryCollection->SetGenerateOverlapEvents(true);
 	GeometryCollection->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GeometryCollection->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	GeometryCollection->bUseSizeSpecificDamageThreshold = true;
+
+	Capsule->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 
 }
 

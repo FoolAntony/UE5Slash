@@ -7,6 +7,8 @@
 #include "Interfaces/HitInterface.h"
 #include "BreakableActor.generated.h"
 
+class UCapsuleComponent;
+
 UCLASS()
 class UE5SLASH_API ABreakableActor : public AActor, public IHitInterface
 {
@@ -21,12 +23,15 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UCapsuleComponent* Capsule;
+
 private:
 
 	UPROPERTY(VisibleAnywhere)
 	UGeometryCollectionComponent* GeometryCollection;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Breackable Properties")
 	TSubclassOf<class ATreasure> TreasureClass;
 
 };
