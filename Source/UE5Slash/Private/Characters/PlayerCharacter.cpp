@@ -79,7 +79,7 @@ void APlayerCharacter::Interact()
 	if (OverlappingWeapon)
 	{ 
 		// attaches weapon item to the right hand socket designed for holding a weapon
-		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
 		CharacterState = ECharacterState::ECS_EquippedOneHandWeapon;
 		OverlappingItem = nullptr;
 		EquippedWeapon = OverlappingWeapon;

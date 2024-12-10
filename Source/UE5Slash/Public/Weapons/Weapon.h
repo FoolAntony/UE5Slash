@@ -22,7 +22,7 @@ public:
 
 	AWeapon();
 
-	void Equip(USceneComponent* InParent, FName InSocketName);
+	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 
 	void AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
 
@@ -54,8 +54,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* BoxTraceEnd;
-
 	
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	float Damage = 20.f;
 
 public:
 	FORCEINLINE UBoxComponent* GetWeaponBox() const { return WeaponBoxCollider; }
