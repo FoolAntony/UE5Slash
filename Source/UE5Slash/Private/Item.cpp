@@ -4,6 +4,7 @@
 #include "Components/SphereComponent.h"
 #include "Item.h"
 #include "Characters/PlayerCharacter.h"
+#include "NiagaraComponent.h"
 
 // Sets default values
 AItem::AItem()
@@ -13,9 +14,13 @@ AItem::AItem()
 
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMeshComponent"));
 	SetRootComponent(ItemMesh);
+	
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(GetRootComponent());
+
+	EmbersEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Embers VFX"));
+	EmbersEffect->SetupAttachment(GetRootComponent());
 
 }
 
