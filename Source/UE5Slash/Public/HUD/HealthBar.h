@@ -13,5 +13,5 @@ UCLASS()
 class UE5SLASH_API UHealthBar : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 };
