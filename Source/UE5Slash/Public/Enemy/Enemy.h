@@ -12,6 +12,7 @@ class UAnimMontage;
 class UAttributeComponent;
 class UHealthBarComponent;
 class AAIController;
+class UPawnSensingComponent;
 
 UCLASS()
 class UE5SLASH_API AEnemy : public ACharacter, public IHitInterface
@@ -40,6 +41,9 @@ protected:
 	bool InTargetRange(AActor* Target, double Radious);
 	void MoveToTarget(AActor* Target);
 
+	UFUNCTION()
+	void PawnSeen(APawn* SeenPawn);
+
 	AActor* ChoosePatrolTarget();
 
 	/*
@@ -53,12 +57,19 @@ protected:
 
 
 private:	
+
+	/*
+	*  Components
+	*/
 	
 	UPROPERTY(VisibleAnywhere)
 	UAttributeComponent* Attributes;
 
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBarWidget;
+
+	UPROPERTY(VisibleAnywhere)
+	UPawnSensingComponent* PawnSensing;
 
 	/*
 	*	Animation montages
