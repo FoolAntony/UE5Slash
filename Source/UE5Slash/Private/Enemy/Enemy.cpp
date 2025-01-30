@@ -124,8 +124,6 @@ bool AEnemy::InTargetRange(AActor* Target, double Radious)
 	if (Target == nullptr) return false;
 
 	const double DistanceToTarget = (Target->GetActorLocation() - GetActorLocation()).Size();
-	DRAW_SPHERE_SingleFrame(GetActorLocation());
-	DRAW_SPHERE_SingleFrame(Target->GetActorLocation());
 	return DistanceToTarget <= Radious;
 }
 
@@ -144,12 +142,15 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 	if (EnemyState == EEnemyState::EES_Chasing) return;
 	if (SeenPawn->ActorHasTag(FName("PlayerCharacter")))
 	{
-		EnemyState = EEnemyState::EES_Chasing;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
-		GetCharacterMovement()->MaxWalkSpeed =EnemySpeedChase;
-
+		GetCharacterMovement()->MaxWalkSpeed = EnemySpeedChase;
 		CombatTarget = SeenPawn;
-		MoveToTarget(CombatTarget);
+
+		if (EnemyState != EEnemyState::EES_Attacking)
+		{
+			EnemyState = EEnemyState::EES_Chasing;
+			MoveToTarget(CombatTarget);
+		}
 	}
 }
 
@@ -217,7 +218,7 @@ void AEnemy::CheckPatrolTarget()
 
 void AEnemy::CheckCombatTarget()
 {
-	if (!InTargetRange(CombatTarget, CombatRadius))
+	if (!InTargetRange(CombatTarget, CombatRadius) && EnemyState != EEnemyState::EES_Patrolling)
 	{
 		//Outside combat radius, lose interest
 		CombatTarget = nullptr;
@@ -228,6 +229,19 @@ void AEnemy::CheckCombatTarget()
 		EnemyState = EEnemyState::EES_Patrolling;
 		GetCharacterMovement()->MaxWalkSpeed = EnemySpeedWalk;
 		MoveToTarget(PatrolTarget);
+	}
+	else if (!InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing)
+	{
+		//Outside attack range, chase character;
+		EnemyState = EEnemyState::EES_Chasing;
+		GetCharacterMovement()->MaxWalkSpeed = EnemySpeedChase;
+		MoveToTarget(CombatTarget);
+	}
+	else if (InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking)
+	{
+		//Inside attack range, attack character
+		EnemyState = EEnemyState::EES_Attacking;
+		//TODO:: Attach Montage
 	}
 }
 
@@ -330,6 +344,12 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	}
 
 	CombatTarget = EventInstigator->GetPawn();
+	if (EnemyState == EEnemyState::EES_Patrolling)
+	{
+		EnemyState = EEnemyState::EES_Chasing;
+		GetCharacterMovement()->MaxWalkSpeed = EnemySpeedChase;
+		MoveToTarget(CombatTarget);
+	}
 
 	return DamageAmount;
 }
