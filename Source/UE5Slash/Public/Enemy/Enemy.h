@@ -58,6 +58,11 @@ protected:
 
 private:	
 
+	const float EnemySpeedWalk = 125.f;
+
+	const float EnemySpeedChase = 300.f;
+
+
 	/*
 	*  Components
 	*/
@@ -117,5 +122,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "AI Navigation")
 	float WaitMax = 10.f;
+
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 };

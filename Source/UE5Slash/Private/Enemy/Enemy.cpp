@@ -41,6 +41,8 @@ AEnemy::AEnemy()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 
+	GetCharacterMovement()->MaxWalkSpeed = EnemySpeedWalk;
+
 }
 
 
@@ -139,7 +141,16 @@ void AEnemy::MoveToTarget(AActor* Target)
 
 void AEnemy::PawnSeen(APawn* SeenPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Seen Pawn!"));
+	if (EnemyState == EEnemyState::EES_Chasing) return;
+	if (SeenPawn->ActorHasTag(FName("PlayerCharacter")))
+	{
+		EnemyState = EEnemyState::EES_Chasing;
+		GetWorldTimerManager().ClearTimer(PatrolTimer);
+		GetCharacterMovement()->MaxWalkSpeed =EnemySpeedChase;
+
+		CombatTarget = SeenPawn;
+		MoveToTarget(CombatTarget);
+	}
 }
 
 AActor* AEnemy::ChoosePatrolTarget()
@@ -184,8 +195,14 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	CheckCombatTarget();	
-	CheckPatrolTarget();
+	if (EnemyState > EEnemyState::EES_Patrolling) 
+	{	
+		CheckCombatTarget();
+	}
+	else
+	{
+		CheckPatrolTarget();
+	}
 }
 
 void AEnemy::CheckPatrolTarget()

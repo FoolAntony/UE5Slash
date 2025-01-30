@@ -113,6 +113,7 @@ void APlayerCharacter::Attack()
 /*
 *	Returns true if player has weapon equipped and not in action state
 */
+
 bool APlayerCharacter::CanAttack()
 {
 	return ActionState == EActionState::EAS_Unoccupied &&
@@ -220,6 +221,8 @@ void APlayerCharacter::BeginPlay()
 			Subsystem->AddMappingContext(GContext, 0);
 		}
 	}
+
+	Tags.Add(FName("PlayerCharacter"));
 	
 }
 
