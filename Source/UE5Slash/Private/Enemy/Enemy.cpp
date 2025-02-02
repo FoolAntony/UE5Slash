@@ -28,7 +28,6 @@ AEnemy::AEnemy()
 	GetMesh()->SetGenerateOverlapEvents(true);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
-	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
 	HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HeathBar"));
 	HealthBarWidget->SetupAttachment(GetRootComponent());;
 	
@@ -176,16 +175,6 @@ AActor* AEnemy::ChoosePatrolTarget()
 	return nullptr;
 }
 
-void AEnemy::PlayHitReactMontage(const FName& SectionName)
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && HitReactMontage)
-	{
-		AnimInstance->Montage_Play(HitReactMontage);
-		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
-	}
-}
-
 void AEnemy::PatrolTimerFinished()
 {
 	MoveToTarget(PatrolTarget);
@@ -289,51 +278,6 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 
 }
 
-void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
-{
-	const FVector Forward = GetActorForwardVector();
-	const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
-	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
-
-	/*
-	* Forward * ToHit = |Forward|*|ToHit| *  cos(theta)
-	* |Forward| = 1, |ToHit| = 1, so Forward*ToHit = cos(theta)
-	*/
-	const double CosTheta = FVector::DotProduct(Forward, ToHit);
-
-	//Takes inverse cosine (acos) of cos(theta) and returns theta
-	double Theta = FMath::Acos(CosTheta);
-
-	//convert radiants to degrees
-	Theta = FMath::RadiansToDegrees(Theta);
-
-	//if crossproduct point down, Theta should be negative
-	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
-
-	if (CrossProduct.Z < 0)
-	{
-		Theta *= -1.f;
-	}
-
-	FName Section("FromBack");
-
-	if (Theta >= -45.f && Theta < 45.f) { Section = FName("FromFront"); }
-	else if (Theta >= -135.f && Theta < -45.f) { Section = FName("FromLeft"); }
-	else if (Theta >= 45.f && Theta < 135.f) { Section = FName("FromRight"); }
-
-	PlayHitReactMontage(FName(Section));
-
-	/*
-	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 60.f, 5.f, FColor::Magenta, 5.f);
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, FString::Printf(TEXT("Theta %f"), Theta));
-	}
-	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 60.f, 5.f, FColor::Red, 5.f);
-	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 60.f, 5.f, FColor::Green, 5.f);
-	*/
-	}
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {

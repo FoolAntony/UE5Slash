@@ -10,9 +10,10 @@
 #include "Camera/CameraComponent.h"
 #include "GroomComponent.h"
 #include "Item.h"
+#include "Components/BoxComponent.h"
 #include "Weapons/Weapon.h"
 #include "Animation/AnimMontage.h"
-#include "Components/BoxComponent.h"
+
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -187,15 +188,6 @@ void APlayerCharacter::PlayEquipMontage(const FName& SectionName)
 	{
 		AnimInstance->Montage_Play(EquipMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
-	}
-}
-
-void APlayerCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)
-{
-	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
-	{
-		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
-		EquippedWeapon->IgnoreActors.Empty();
 	}
 }
 

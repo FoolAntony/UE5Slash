@@ -3,19 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "Interfaces/HitInterface.h"
+#include "Characters/BaseCharacter.h"
 #include "Characters/CharacterTypes.h"
 #include "Enemy.generated.h"
 
-class UAnimMontage;
-class UAttributeComponent;
 class UHealthBarComponent;
 class AAIController;
 class UPawnSensingComponent;
 
 UCLASS()
-class UE5SLASH_API AEnemy : public ACharacter, public IHitInterface
+class UE5SLASH_API AEnemy : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -29,15 +26,13 @@ public:
 
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 
-	void DirectionalHitReact(const FVector& ImpactPoint);
-
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)  override;
 
 protected:
 
 	virtual void BeginPlay() override;
 
-	void Die();
+	virtual void Die() override;
 	bool InTargetRange(AActor* Target, double Radious);
 	void MoveToTarget(AActor* Target);
 
@@ -46,10 +41,6 @@ protected:
 
 	AActor* ChoosePatrolTarget();
 
-	/*
-	*	Play montage functions
-	*/
-	void PlayHitReactMontage(const FName& SectionName);
 
 	UPROPERTY(BlueprintReadOnly)
 	EDeathPose DeathPose = EDeathPose::EDP_Alive;
@@ -67,8 +58,6 @@ private:
 	*  Components
 	*/
 	
-	UPROPERTY(VisibleAnywhere)
-	UAttributeComponent* Attributes;
 
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBarWidget;
@@ -79,17 +68,6 @@ private:
 	/*
 	*	Animation montages
 	*/
-	UPROPERTY(EditDefaultsOnly, Category = "Montages")
-	UAnimMontage* HitReactMontage;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Montages")
-	UAnimMontage* DeathMontage;
-
-	UPROPERTY(EditAnywhere, Category = "Sounds")
-	USoundBase* HitSound;
-
-	UPROPERTY(EditAnywhere, Category = "Visual Effects")
-	UParticleSystem* HitParticles;
 
 	UPROPERTY()
 	AActor* CombatTarget;
