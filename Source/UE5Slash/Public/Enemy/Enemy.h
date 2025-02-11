@@ -22,7 +22,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void CheckPatrolTarget();
 	void CheckCombatTarget();
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 
@@ -32,7 +31,9 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
-
+	virtual void Attack() override;
+	virtual void PlayAttackMontage() override;
+	virtual void HandleDamage(float DamageAmount) override;
 	virtual void Die() override;
 	bool InTargetRange(AActor* Target, double Radious);
 	void MoveToTarget(AActor* Target);
@@ -44,15 +45,18 @@ protected:
 
 
 	UPROPERTY(BlueprintReadOnly)
-	EDeathPose DeathPose = EDeathPose::EDP_Alive;
+	EDeathPose DeathPose;
 
+	UPROPERTY(BlueprintReadOnly)
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
+	virtual bool CanAttack() override;
 
 private:	
-
-	const float EnemySpeedWalk = 125.f;
-
-	const float EnemySpeedChase = 300.f;
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float EnemySpeedWalk = 125.f;
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float EnemySpeedChase = 300.f;
 
 
 	/*
@@ -104,6 +108,33 @@ private:
 	UPROPERTY(EditAnywhere, Category = "AI Navigation")
 	float WaitMax = 10.f;
 
-	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+	/*AI Behaviour*/
+
+	void HideHealthBar();
+	void ShowHealthBar();
+	void LoseInterest();
+	void StartPatrolling();
+	void ChaseTarget();
+	void ClearPatrolTimer();
+	bool IsOutsideCombatRadius();
+	bool IsOutsideAttackRadius();
+	bool IsInsideAttackRadius();
+	bool IsPatrolling();
+	bool IsChasing();
+	bool IsAttacking();
+	bool IsDead();
+	bool IsEngaged();
+
+
+	/* Combat */
+
+	void StartAttackTimer();
+	void ClearAttackTimer();
+
+	FTimerHandle AttackTimer;
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float AttackMin = 0.5f;
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float AttackMax = 1.f;
 
 };

@@ -29,6 +29,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Attack();
 	virtual void Die();
+	void PlayHitSound(const FVector& ImpactPoint);
+	void SpawnHitParticles(const FVector& ImpactPoint);
+	virtual void HandleDamage(float DamageAmount);
 
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
@@ -44,7 +47,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
 	virtual bool CanAttack();
-	
+	bool IsAlive();
 
 	/*
 	*	Animation montages
@@ -64,6 +67,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UAttributeComponent* Attributes;
 
+private:
 	UPROPERTY(EditAnywhere, Category = "Sounds")
 	USoundBase* HitSound;
 
