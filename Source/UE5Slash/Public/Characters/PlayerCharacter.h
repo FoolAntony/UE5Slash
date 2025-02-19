@@ -69,10 +69,7 @@ protected:
 	void Interact();
 	virtual void Attack() override;
 
-	/*
-	*	Play montage functions
-	*/
-	virtual void PlayAttackMontage() override;
+	/* Play montage functions */
 	void PlayEquipMontage(const FName& SectionName);
 
 	virtual void AttackEnd() override;

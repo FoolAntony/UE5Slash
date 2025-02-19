@@ -32,6 +32,8 @@ protected:
 	void PlayHitSound(const FVector& ImpactPoint);
 	void SpawnHitParticles(const FVector& ImpactPoint);
 	virtual void HandleDamage(float DamageAmount);
+	void DisableCapsuleCollision();
+
 
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
@@ -40,7 +42,10 @@ protected:
 	/*
 	*	Play montage functions
 	*/
-	virtual void PlayAttackMontage();
+	virtual int32 PlayAttackMontage();
+	virtual int32 PlayDeathMontage();
+	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionNames);
+	void PlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
 	void PlayHitReactMontage(const FName& SectionName);
 	void DirectionalHitReact(const FVector& ImpactPoint);
 
@@ -60,7 +65,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	UAnimMontage* DeathMontage;
-	
+
+	UPROPERTY(EditAnywhere, Category =  Combat)
+	TArray<FName> AttackMontageSections;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	TArray<FName> DeathMontageSections;
 	/*
 	*  Components
 	*/

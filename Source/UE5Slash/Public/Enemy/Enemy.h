@@ -32,11 +32,14 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void Attack() override;
-	virtual void PlayAttackMontage() override;
 	virtual void HandleDamage(float DamageAmount) override;
 	virtual void Die() override;
 	bool InTargetRange(AActor* Target, double Radious);
 	void MoveToTarget(AActor* Target);
+	virtual int32 PlayDeathMontage() override;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float DeathLifeSpan = 8.0;
 
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn);
@@ -51,6 +54,8 @@ protected:
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 	virtual bool CanAttack() override;
+
+	virtual void AttackEnd() override;
 
 private:	
 	UPROPERTY(EditAnywhere, Category = Combat)
@@ -133,8 +138,8 @@ private:
 
 	FTimerHandle AttackTimer;
 	UPROPERTY(EditAnywhere, Category = Combat)
-	float AttackMin = 0.5f;
+	float AttackMin = 3.f;
 	UPROPERTY(EditAnywhere, Category = Combat)
-	float AttackMax = 1.f;
+	float AttackMax = 4.f;
 
 };
