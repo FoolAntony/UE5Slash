@@ -19,55 +19,69 @@ class UE5SLASH_API AEnemy : public ABaseCharacter
 public:
 
 	AEnemy();
+
+	/** <AActor> */
 	virtual void Tick(float DeltaTime) override;
-	void CheckPatrolTarget();
-	void CheckCombatTarget();
-
-	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
-
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)  override;
-
 	virtual void Destroyed() override;
+	/** </AActor> */
+
+	/** <IHitInterface> */
+	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+	/** </IHitInterface> */
+
+
 protected:
 
+	/** <AActor> */
 	virtual void BeginPlay() override;
+	/** </AActor> */
+
+	/** <ABaseCharacter> */
+	virtual int32 PlayDeathMontage() override;
 	virtual void Attack() override;
 	virtual void HandleDamage(float DamageAmount) override;
 	virtual void Die() override;
-	bool InTargetRange(AActor* Target, double Radious);
-	void MoveToTarget(AActor* Target);
-	virtual int32 PlayDeathMontage() override;
-
-	UPROPERTY(EditAnywhere, Category = Combat)
-	float DeathLifeSpan = 8.0;
-
-	UFUNCTION()
-	void PawnSeen(APawn* SeenPawn);
-
-	AActor* ChoosePatrolTarget();
-
-
+	virtual void AttackEnd() override;
+	virtual bool CanAttack() override;
+	/** </ABaseCharacter> */
+	
 	UPROPERTY(BlueprintReadOnly)
 	EDeathPose DeathPose;
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
-	virtual bool CanAttack() override;
+private:
 
-	virtual void AttackEnd() override;
-
-private:	
-	UPROPERTY(EditAnywhere, Category = Combat)
-	float EnemySpeedWalk = 125.f;
-	UPROPERTY(EditAnywhere, Category = Combat)
-	float EnemySpeedChase = 300.f;
-
-
-	/*
-	*  Components
-	*/
+	/** AI Behaviour */
+	void InitializeEnemy();
+	AActor* ChoosePatrolTarget();
+	void CheckPatrolTarget();
+	void CheckCombatTarget();
+	void PatrolTimerFinished();
+	void StartAttackTimer();
+	void ClearAttackTimer();
+	void HideHealthBar();
+	void ShowHealthBar();
+	void LoseInterest();
+	void StartPatrolling();
+	void ChaseTarget();
+	void ClearPatrolTimer();
+	void MoveToTarget(AActor* Target);
+	bool IsOutsideCombatRadius();
+	bool IsOutsideAttackRadius();
+	bool IsInsideAttackRadius();
+	bool IsPatrolling();
+	bool IsChasing();
+	bool IsAttacking();
+	bool IsDead();
+	bool IsEngaged();
+	bool InTargetRange(AActor* Target, double Radious);
+	void SpawnDefaultWeapon();
 	
+	UFUNCTION()
+	void PawnSeen(APawn* SeenPawn); // Callback for OnPawnSeen in UPawnSensingComponent
 
 	UPROPERTY(VisibleAnywhere)
 	UHealthBarComponent* HealthBarWidget;
@@ -83,13 +97,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	double CombatRadius = 500.f;
-	
+
 	UPROPERTY(EditAnywhere)
 	double AttackRadius = 150.f;
-
-	/*
-	*	Navigation
-	*/
 
 	UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
 	AActor* PatrolTarget;
@@ -105,41 +115,28 @@ private:
 
 	FTimerHandle PatrolTimer;
 
-	void PatrolTimerFinished();
+	UPROPERTY(EditAnywhere, Category = "AI Navigation")
+	float PatrolWaitMin = 5.f;
 
 	UPROPERTY(EditAnywhere, Category = "AI Navigation")
-	float WaitMin = 5.f;
+	float PatrolWaitMax = 10.f;
 
-	UPROPERTY(EditAnywhere, Category = "AI Navigation")
-	float WaitMax = 10.f;
-
-	/*AI Behaviour*/
-
-	void HideHealthBar();
-	void ShowHealthBar();
-	void LoseInterest();
-	void StartPatrolling();
-	void ChaseTarget();
-	void ClearPatrolTimer();
-	bool IsOutsideCombatRadius();
-	bool IsOutsideAttackRadius();
-	bool IsInsideAttackRadius();
-	bool IsPatrolling();
-	bool IsChasing();
-	bool IsAttacking();
-	bool IsDead();
-	bool IsEngaged();
-
-
-	/* Combat */
-
-	void StartAttackTimer();
-	void ClearAttackTimer();
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float EnemySpeedWalk = 125.f;
 
 	FTimerHandle AttackTimer;
+
 	UPROPERTY(EditAnywhere, Category = Combat)
 	float AttackMin = 3.f;
+
 	UPROPERTY(EditAnywhere, Category = Combat)
 	float AttackMax = 4.f;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float EnemySpeedChase = 300.f;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float DeathLifeSpan = 8.0;
+
 
 };

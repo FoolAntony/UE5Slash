@@ -10,7 +10,6 @@
 #include "Camera/CameraComponent.h"
 #include "GroomComponent.h"
 #include "Item.h"
-#include "Components/BoxComponent.h"
 #include "Weapons/Weapon.h"
 #include "Animation/AnimMontage.h"
 
@@ -89,17 +88,27 @@ void APlayerCharacter::Interact()
 	{
 		if (CanDisarm())
 		{
-			PlayEquipMontage(FName("Unequip"));
-			CharacterState = ECharacterState::ECS_Unequipped;
-			ActionState = EActionState::EAS_EquippingWeapon;
+			Disarm();
 		}
 		else if(CanArm())
 		{
-			PlayEquipMontage(FName("Equip"));
-			CharacterState = ECharacterState::ECS_EquippedOneHandWeapon;
-			ActionState = EActionState::EAS_EquippingWeapon;
+			Arm();
 		}
 	}
+}
+
+void APlayerCharacter::Disarm()
+{
+	PlayEquipMontage(FName("Unequip"));
+	CharacterState = ECharacterState::ECS_Unequipped;
+	ActionState = EActionState::EAS_EquippingWeapon;
+}
+
+void APlayerCharacter::Arm()
+{
+	PlayEquipMontage(FName("Equip"));
+	CharacterState = ECharacterState::ECS_EquippedOneHandWeapon;
+	ActionState = EActionState::EAS_EquippingWeapon;
 }
 
 void APlayerCharacter::Attack()
@@ -112,10 +121,6 @@ void APlayerCharacter::Attack()
 		ActionState = EActionState::EAS_Attacking;
 	}
 }
-
-/*
-*	Returns true if player has weapon equipped and not in action state
-*/
 
 bool APlayerCharacter::CanAttack()
 {
@@ -136,7 +141,7 @@ bool APlayerCharacter::CanArm()
 		EquippedWeapon;
 }
 
-void APlayerCharacter::Disarm()
+void APlayerCharacter::AttachWeaponToBack()
 {
 	if (EquippedWeapon)
 	{
@@ -144,7 +149,7 @@ void APlayerCharacter::Disarm()
 	}
 }
 
-void APlayerCharacter::Arm()
+void APlayerCharacter::AttachWeaponToHand()
 {
 	if (EquippedWeapon)
 	{
@@ -177,7 +182,6 @@ void APlayerCharacter::Jump()
 	Super::Jump();
 }
 
-// Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -194,14 +198,12 @@ void APlayerCharacter::BeginPlay()
 	
 }
 
-// Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-// Called to bind functionality to input
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

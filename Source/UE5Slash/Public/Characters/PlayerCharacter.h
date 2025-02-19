@@ -24,25 +24,45 @@ class UE5SLASH_API APlayerCharacter : public ABaseCharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
+
 	APlayerCharacter();
 
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void Jump() override;
 
 
 protected:
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 
-	/*
-	*	Enhanced input action variables
-	*/
+	/**	Enhanced action functions */
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+	void Interact();
+	virtual void Attack() override;
+
+	/** Combat */
+	void PlayEquipMontage(const FName& SectionName);
+	virtual void AttackEnd() override;
+	virtual bool CanAttack() override;
+	bool CanDisarm();
+	bool CanArm();
+	void Disarm();
+	void Arm();
+
+	UFUNCTION(BlueprintCallable)
+	void AttachWeaponToBack();
+
+	UFUNCTION(BlueprintCallable)
+	void AttachWeaponToHand();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishEquipping();
+
+	/**	Enhanced input action variables */
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* GContext;
 
@@ -61,42 +81,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* AttackAction;
 
-	/*
-	*	Enhanced action functions
-	*/
-	void Move(const FInputActionValue& Value);
-	void Look(const FInputActionValue& Value);
-	void Interact();
-	virtual void Attack() override;
-
-	/* Play montage functions */
-	void PlayEquipMontage(const FName& SectionName);
-
-	virtual void AttackEnd() override;
-	virtual bool CanAttack() override;
-	bool CanDisarm();
-	bool CanArm();
-
-	UFUNCTION(BlueprintCallable)
-	void Disarm();
-	
-	UFUNCTION(BlueprintCallable)
-	void Arm();
-	
-	UFUNCTION(BlueprintCallable)
-	void FinishEquipping();
-
 private:
 
-	/*
-	*	Player states
-	*/
+	/**	Player States */
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 
-	/*
-	*	Player character actor components
-	*/
+	/**	Character Components*/
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CameraBoom;
 
