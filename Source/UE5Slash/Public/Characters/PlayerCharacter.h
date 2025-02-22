@@ -31,7 +31,7 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 
 	virtual void Jump() override;
 
@@ -62,7 +62,10 @@ protected:
 	void AttachWeaponToHand();
 
 	UFUNCTION(BlueprintCallable)
-	void FinishEquipping();
+	void FinishEquipping();	
+	
+	UFUNCTION(BlueprintCallable)
+	void HitReactEnd();
 
 	/**	Enhanced input action variables */
 	UPROPERTY(EditAnywhere, Category = "Input")
