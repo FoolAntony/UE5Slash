@@ -16,6 +16,7 @@ class UCameraComponent;
 class UGroomComponent;
 class AItem;
 class UAnimMontage;
+class UPlayerOverlay;
 
 
 UCLASS()
@@ -90,6 +91,8 @@ protected:
 
 private:
 
+	void InitializePlayerOverlay();
+
 	/**	Player States */
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 	EActionState ActionState = EActionState::EAS_Unoccupied;
@@ -112,6 +115,9 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	UAnimMontage* EquipMontage;
+
+	UPROPERTY()
+	UPlayerOverlay* PlayerOverlay;
 
 public:
 

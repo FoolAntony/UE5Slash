@@ -10,8 +10,11 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GroomComponent.h"
+#include "Components/AttributeComponent.h"
 #include "Item.h"
 #include "Weapons/Weapon.h"
+#include "HUD/GameHUD.h"
+#include "HUD/PlayerOverlay.h"
 #include "Animation/AnimMontage.h"
 
 
@@ -206,6 +209,8 @@ void APlayerCharacter::BeginPlay()
 		}
 	}
 
+	InitializePlayerOverlay();
+
 	Tags.Add(FName("PlayerTarget"));
 	
 }
@@ -243,5 +248,22 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	return DamageAmount;
 }
 
-
-
+void APlayerCharacter::InitializePlayerOverlay()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		AGameHUD* GameHUD = Cast<AGameHUD>(PlayerController->GetHUD());
+		if (GameHUD)
+		{
+			UPlayerOverlay* PlayerOverlay = GameHUD->GetPlayerOverlay();
+			if (PlayerOverlay && Attributes)
+			{
+				PlayerOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+				PlayerOverlay->SetStaminaBarPercent(1.f);
+				PlayerOverlay->SetCoins(0);
+				PlayerOverlay->SetSouls(0);
+			}
+		}
+	}
+}

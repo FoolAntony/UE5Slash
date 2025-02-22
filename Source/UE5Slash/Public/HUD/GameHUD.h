@@ -6,12 +6,15 @@
 #include "GameFramework/HUD.h"
 #include "GameHUD.generated.h"
 
-class UPlayerOverla
+class UPlayerOverlay;
 
 UCLASS()
 class UE5SLASH_API AGameHUD : public AHUD
 {
 	GENERATED_BODY()
+
+public:
+	FORCEINLINE UPlayerOverlay* GetPlayerOverlay() const { return PlayerOverlay; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -23,4 +26,5 @@ private:
 
 	UPROPERTY()
 	UPlayerOverlay* PlayerOverlay;
+
 };
