@@ -213,7 +213,6 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -236,6 +235,12 @@ void APlayerCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 
 	ActionState = EActionState::EAS_HitReaction;
+}
+
+float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	HandleDamage(DamageAmount);
+	return DamageAmount;
 }
 
 
