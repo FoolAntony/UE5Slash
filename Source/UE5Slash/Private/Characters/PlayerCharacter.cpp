@@ -194,7 +194,10 @@ void APlayerCharacter::AttackEnd()
 
 void APlayerCharacter::Jump()
 {
-	Super::Jump();
+	if (IsUnoccupied())
+	{
+		Super::Jump();
+	}
 }
 
 void APlayerCharacter::BeginPlay()
@@ -245,7 +248,18 @@ void APlayerCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	HandleDamage(DamageAmount);
+
+	SetPlayerHUDHealth();
+
 	return DamageAmount;
+}
+
+void APlayerCharacter::SetPlayerHUDHealth()
+{
+	if (PlayerOverlay && Attributes)
+	{
+		PlayerOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+	}
 }
 
 void APlayerCharacter::InitializePlayerOverlay()
@@ -256,7 +270,7 @@ void APlayerCharacter::InitializePlayerOverlay()
 		AGameHUD* GameHUD = Cast<AGameHUD>(PlayerController->GetHUD());
 		if (GameHUD)
 		{
-			UPlayerOverlay* PlayerOverlay = GameHUD->GetPlayerOverlay();
+			PlayerOverlay = GameHUD->GetPlayerOverlay();
 			if (PlayerOverlay && Attributes)
 			{
 				PlayerOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
@@ -267,3 +281,9 @@ void APlayerCharacter::InitializePlayerOverlay()
 		}
 	}
 }
+
+bool APlayerCharacter::IsUnoccupied()
+{
+	return ActionState == EActionState::EAS_Unoccupied;
+}
+

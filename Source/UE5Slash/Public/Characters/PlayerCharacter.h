@@ -39,6 +39,7 @@ public:
 	virtual void Jump() override;
 
 
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -92,6 +93,8 @@ protected:
 private:
 
 	void InitializePlayerOverlay();
+	void SetPlayerHUDHealth();
+	bool IsUnoccupied();
 
 	/**	Player States */
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
