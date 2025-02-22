@@ -107,6 +107,18 @@ bool ABaseCharacter::CanAttack()
 	return false;
 }
 
+void ABaseCharacter::GetHit_Implementation(const FVector& ImpactPoint)
+{
+	if (IsAlive())
+	{
+		DirectionalHitReact(ImpactPoint);
+	}
+	else Die();
+
+	PlayHitSound(ImpactPoint);
+	SpawnHitParticles(ImpactPoint);
+}
+
 bool ABaseCharacter::IsAlive()
 {
 	return Attributes && Attributes->IsAlive();

@@ -30,6 +30,7 @@ protected:
 	virtual void Die();
 	virtual void HandleDamage(float DamageAmount);
 	virtual bool CanAttack();
+	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 	bool IsAlive();
 	void PlayHitSound(const FVector& ImpactPoint);
 	void SpawnHitParticles(const FVector& ImpactPoint);
