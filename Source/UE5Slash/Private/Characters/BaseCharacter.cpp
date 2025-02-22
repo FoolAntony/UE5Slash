@@ -114,10 +114,10 @@ void ABaseCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* H
 		DirectionalHitReact(Hitter->GetActorLocation());
 	}
 	else Die();
+	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	PlayHitSound(ImpactPoint);
 	SpawnHitParticles(ImpactPoint);
-	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 bool ABaseCharacter::IsAlive()
@@ -158,6 +158,37 @@ void ABaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
 	else if (Theta >= 45.f && Theta < 135.f) { Section = FName("FromRight"); }
 
 	PlayHitReactMontage(FName(Section));
+}
+
+void ABaseCharacter::StopAttackMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_Stop(0.25f, AttackMontage);
+	}
+}
+
+FVector ABaseCharacter::GetTranslationWarpTarget()
+{
+	if (CombatTarget == nullptr) return FVector();
+
+	const FVector CombatTargetLocation = CombatTarget->GetActorLocation();
+	const FVector Location = GetActorLocation();
+
+	FVector TargetToSelf = (Location - CombatTargetLocation).GetSafeNormal();
+	TargetToSelf *= WarpTargetDistance;
+	return CombatTargetLocation + TargetToSelf;
+}
+
+FVector ABaseCharacter::GetRotationWarpTarget()
+{
+	if (CombatTarget)
+	{
+		return CombatTarget->GetActorLocation();
+	}
+
+	return FVector();
 }
 
 void ABaseCharacter::PlayHitReactMontage(const FName& SectionName)
