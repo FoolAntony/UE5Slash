@@ -138,6 +138,13 @@ bool APlayerCharacter::CanAttack()
 		CharacterState != ECharacterState::ECS_Unequipped;
 }
 
+void APlayerCharacter::Die()
+{
+	Super::Die();
+
+	ActionState = EActionState::EAS_Dead;
+}
+
 bool APlayerCharacter::CanDisarm()
 {
 	return ActionState == EActionState::EAS_Unoccupied && 
@@ -242,7 +249,10 @@ void APlayerCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor*
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 
-	ActionState = EActionState::EAS_HitReaction;
+	if (Attributes && Attributes->GetHealthPercent() > 0.f)
+	{
+		ActionState = EActionState::EAS_HitReaction;
+	}
 }
 
 float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

@@ -38,16 +38,13 @@ protected:
 	/** </AActor> */
 
 	/** <ABaseCharacter> */
-	virtual int32 PlayDeathMontage() override;
 	virtual void Attack() override;
 	virtual void HandleDamage(float DamageAmount) override;
 	virtual void Die() override;
 	virtual void AttackEnd() override;
 	virtual bool CanAttack() override;
 	/** </ABaseCharacter> */
-	
-	UPROPERTY(BlueprintReadOnly)
-	EDeathPose DeathPose;
+
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;

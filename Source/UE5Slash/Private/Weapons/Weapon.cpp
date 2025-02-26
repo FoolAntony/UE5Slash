@@ -106,7 +106,8 @@ void AWeapon::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 
 bool AWeapon::ActorIsSameType(AActor* OtherActor)
 {
-	return GetOwner()->ActorHasTag(TEXT("Enemy")) && OtherActor->ActorHasTag(TEXT("Enemy"));
+	return GetOwner()->ActorHasTag(TEXT("Enemy")) && OtherActor->ActorHasTag(TEXT("Enemy")) ||
+		GetOwner()->ActorHasTag(TEXT("PlayerTarget")) && OtherActor->ActorHasTag(TEXT("PlayerTarget"));
 }
 
 void AWeapon::ExecuteGetHit(FHitResult& BoxHit)

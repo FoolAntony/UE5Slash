@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
+#include "Characters/CharacterTypes.h"
 #include "BaseCharacter.generated.h"
 
 class AWeapon;
@@ -35,6 +36,7 @@ protected:
 	void PlayHitSound(const FVector& ImpactPoint);
 	void SpawnHitParticles(const FVector& ImpactPoint);
 	void DisableCapsuleCollision();
+	void DisableMeshCollision();
 	
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
@@ -68,6 +70,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	double WarpTargetDistance = 75.f;
 
+	UPROPERTY(BlueprintReadOnly)
+	EDeathPose DeathPose;
+
 private:
 
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionNames);
@@ -93,5 +98,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FName> DeathMontageSections;
+
+public:
+
+	FORCEINLINE EDeathPose GetDeathPose() { return DeathPose; }
 
 };
