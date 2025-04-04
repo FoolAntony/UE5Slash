@@ -16,6 +16,8 @@
 #include "HUD/GameHUD.h"
 #include "HUD/PlayerOverlay.h"
 #include "Animation/AnimMontage.h"
+#include "Items/Soul.h"
+#include "Items/Treasure.h"
 
 
 // Sets default values
@@ -204,6 +206,29 @@ void APlayerCharacter::Jump()
 	if (IsUnoccupied())
 	{
 		Super::Jump();
+	}
+}
+
+void APlayerCharacter::SetOverlappingItem(AItem* Item)
+{
+	OverlappingItem = Item;
+}
+
+void APlayerCharacter::AddSouls(ASoul* Soul)
+{
+	if (Attributes && PlayerOverlay)
+	{
+		Attributes->AddSouls(Soul->GetSouls());
+		PlayerOverlay->SetSouls(Attributes->GetSouls());
+	}
+}
+
+void APlayerCharacter::AddGold(ATreasure* Gold)
+{
+	if (Attributes && PlayerOverlay)
+	{
+		Attributes->AddGold(Gold->GetGold());
+		PlayerOverlay->SetCoins(Attributes->GetGold());
 	}
 }
 
