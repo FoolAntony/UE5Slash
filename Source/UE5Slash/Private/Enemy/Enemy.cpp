@@ -9,6 +9,7 @@
 #include "Weapons/Weapon.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/HealthBarComponent.h"
+#include "Items/Soul.h"
 #include "Navigation/PathFollowingComponent.h"
 
 AEnemy::AEnemy()
@@ -131,6 +132,23 @@ void AEnemy::Die()
 	SetLifeSpan(DeathLifeSpan);
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	SpawnSoul();
+}
+
+void AEnemy::SpawnSoul()
+{
+	UWorld* World = GetWorld();
+
+	if (World && SoulClass && Attributes)
+	{
+		FVector SpawnLocation = GetActorLocation() + FVector(0.f, 0.f, 25.f);
+		ASoul* SpawnedSoul = World->SpawnActor<ASoul>(SoulClass, SpawnLocation, GetActorRotation());
+		if (SpawnedSoul)
+		{
+			SpawnedSoul->SetSouls(Attributes->GetSouls());
+		}
+	}
 }
 
 void AEnemy::AttackEnd()
